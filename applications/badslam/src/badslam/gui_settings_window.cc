@@ -99,7 +99,14 @@ SettingsDialog::SettingsDialog(QString* dataset_path, BadSlamConfig* config, boo
   connect(k4a_button, &QPushButton::clicked, this, &SettingsDialog::K4ALiveInputClicked);
   dataset_layout->addWidget(k4a_button);
 #endif
+
   
+#ifdef HAVE_FREENECT2
+  QPushButton* kinectv2_button = new QPushButton(tr("Kinect v2 live input"));
+  connect(kinectv2_button, &QPushButton::clicked, this, &SettingsDialog::Kinectv2LiveInputClicked);
+  dataset_layout->addWidget(kinectv2_button);
+#endif
+
   // TODO: Allow selecting the ground truth trajectory file
   
   // TODO: Maybe allow selecting some presets here in a second line (real-time, offline - low quality, offline - high quality)?
@@ -560,6 +567,22 @@ void SettingsDialog::K4ALiveInputClicked() {
     restrict_fps_to_edit->setText("0");
   }
 }
+
+void SettingsDialog::Kinectv2LiveInputClicked() {
+  dataset_path_edit->setText("live://kinectv2");
+
+  if (QMessageBox::question(
+      this,
+      tr("Kinect v2 live input"),
+      tr("Set recommended default settings for Azure Kinect live input?"
+         " This will disable photometric residuals, set --max_depth to 10, and set --restrict_fps_to 0."),
+      QMessageBox::StandardButton::Yes | QMessageBox::StandardButton::No) == QMessageBox::StandardButton::Yes) {
+    // use_photometric_residuals_checkbox->setChecked(false);
+    // max_depth_edit->setText("10");
+    // restrict_fps_to_edit->setText("0");
+  }
+}
+
 
 void SettingsDialog::StartClicked() {
   if (ParseSettings()) {

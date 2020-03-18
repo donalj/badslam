@@ -31,6 +31,9 @@ if (CMAKE_CUDA_COMPILER)
   # Optional, only required for live Structure Core camera support
   find_package(Structure)
 
+  # Optional, only required for live Kinect v2 camera support
+  find_package(freenect2 HINTS "$ENV{HOME}/freenect2")
+
   set(CMAKE_CUDA_STANDARD 11)
   set(CMAKE_CUDA_STANDARD_REQUIRED ON)
   
@@ -107,6 +110,14 @@ if (CMAKE_CUDA_COMPILER)
     )
   endif()
 
+  if (freenect2_FOUND)
+    target_link_libraries(badslam_baselib PRIVATE
+      ${freenect2_LIBRARY}
+    )
+    target_compile_definitions(badslam_baselib PUBLIC HAVE_FREENECT2)
+  endif()
+
+
   if (TARGET k4a::k4a)
     target_link_libraries(badslam_baselib PRIVATE
       k4a::k4a
@@ -125,6 +136,7 @@ if (CMAKE_CUDA_COMPILER)
     )
     target_compile_definitions(badslam_baselib PUBLIC HAVE_STRUCTURE)
   endif()
+
 
   target_link_libraries(badslam_baselib
     PRIVATE

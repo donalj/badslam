@@ -58,7 +58,7 @@ class SettingsDialog : public QDialog {
   void RealSenseLiveInputClicked();
   void StructureLiveInputClicked();
   void K4ALiveInputClicked();
-  
+  void Kinectv2LiveInputClicked();
   void StartClicked();
   void StartPausedClicked();
   

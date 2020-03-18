@@ -30,7 +30,7 @@
 #include "badslam/input_realsense.h"
 #include "badslam/input_structure.h"
 #include "badslam/input_azurekinect.h"
-
+#include "badslam/input_kinect2.h"
 #include "badslam/gui_main_window.h"
 
 #include <boost/filesystem.hpp>
@@ -1560,7 +1560,8 @@ void MainWindow::WorkerThreadMain() {
   RealSenseInputThread rs_input;
   StructureInputThread structure_input;
   K4AInputThread k4a_input;
-  int live_input = 0; // 1 realsense, 2 k4a, 3 structure
+  Kinect2InputThread kv2_input;
+  int live_input = 0; // 1 realsense, 2 k4a, 3 structure, 4 kinect v2
   
   if (dataset_folder_path_ == string("live://realsense")) {
     rs_input.Start(&rgbd_video_, &depth_scaling_);
@@ -1579,6 +1580,10 @@ void MainWindow::WorkerThreadMain() {
         config_.k4a_mode,
         config_.k4a_exposure);
     live_input = 2;
+  } 
+    else if (dataset_folder_path_== "live://kv2"){
+      kv2_input.Start(&rgbd_video_, &depth_scaling_);
+      live_input = 4;
   } else {
     if (!ReadTUMRGBDDatasetAssociatedAndCalibrated(
             dataset_folder_path_.c_str(),
@@ -1803,6 +1808,8 @@ void MainWindow::WorkerThreadMain() {
       k4a_input.GetNextFrame();
     } else if (live_input == 3) {
       structure_input.GetNextFrame();
+    } else if (live_input == 4) {
+      kv2_input.GetNextFrame();
     }
     
     // Get the current RGB-D frame's RGB and depth images. This may wait for I/O
