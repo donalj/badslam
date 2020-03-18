@@ -34,6 +34,7 @@
 #include "badslam/input_realsense.h"
 #include "badslam/input_structure.h"
 #include "badslam/input_azurekinect.h"
+#include "badslam/input_kinect2.h"
 
 #include <clocale>
 #include <signal.h>
@@ -469,6 +470,7 @@ int LIBVIS_QT_MAIN(int argc, char** argv) {
   RealSenseInputThread rs_input;
   StructureInputThread structure_input;
   K4AInputThread k4a_input;
+  Kinect2InputThread kv2_input;
   RGBDVideo<Vec3u8, u16> rgbd_video;
   int live_input = 0;
   
@@ -515,6 +517,9 @@ int LIBVIS_QT_MAIN(int argc, char** argv) {
         bad_slam_config.k4a_exposure
     );
     live_input = 2;
+  } else if (dataset_folder_path == "live://kinectv2") {
+    kv2_input.Start(&rgbd_video, &depth_scaling);
+    live_input = 4;
   } else {
     if (!ReadTUMRGBDDatasetAssociatedAndCalibrated(
                 dataset_folder_path.c_str(),
@@ -620,6 +625,8 @@ int LIBVIS_QT_MAIN(int argc, char** argv) {
       k4a_input.GetNextFrame();
     } else if (live_input == 3) {
       structure_input.GetNextFrame();
+    } else if (live_input == 4){
+      kv2_input.GetNextFrame();
     }
     
     // Get the current RGB-D frame's RGB and depth images. This may wait for I/O

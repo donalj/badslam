@@ -1581,7 +1581,7 @@ void MainWindow::WorkerThreadMain() {
         config_.k4a_exposure);
     live_input = 2;
   } 
-    else if (dataset_folder_path_== "live://kv2"){
+    else if (dataset_folder_path_== "live://kinectv2"){
       kv2_input.Start(&rgbd_video_, &depth_scaling_);
       live_input = 4;
   } else {

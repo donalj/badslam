@@ -574,12 +574,14 @@ void SettingsDialog::Kinectv2LiveInputClicked() {
   if (QMessageBox::question(
       this,
       tr("Kinect v2 live input"),
-      tr("Set recommended default settings for Azure Kinect live input?"
-         " This will disable photometric residuals, set --max_depth to 10, and set --restrict_fps_to 0."),
+      tr("Set recommended default settings for Kinect v2 live input?"
+         " This will disable photometric residuals, set --max_depth to 3, and set --restrict_fps_to 0."),
       QMessageBox::StandardButton::Yes | QMessageBox::StandardButton::No) == QMessageBox::StandardButton::Yes) {
-    // use_photometric_residuals_checkbox->setChecked(false);
-    // max_depth_edit->setText("10");
-    // restrict_fps_to_edit->setText("0");
+    use_photometric_residuals_checkbox->setChecked(false);
+    max_depth_edit->setText("3");
+    restrict_fps_to_edit->setText("0");
+    parallel_ba_checkbox->setChecked(false);
+    loop_closure_checkbox->setChecked(false);
   }
 }
 
